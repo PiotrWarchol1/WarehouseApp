@@ -16,7 +16,7 @@ namespace WarehouseApp
             QueryXml();
         }
 
-        private static void QueryXml()
+        private static void  QueryXml()
         {
             var document = XDocument.Load("Fuel.xml");
             var names = document
