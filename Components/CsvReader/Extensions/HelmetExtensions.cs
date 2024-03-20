@@ -15,11 +15,11 @@ namespace WarehouseApp.Components.CsvReader.Extensions
                 yield return new Helmet
                 {
                     Year = int.Parse(columns[0]),
-                    Division = columns[1],
+                    Manufacturer = columns[1],
                     Name = columns[2],
-                    Cyl = int.Parse(columns[3]),
-                    Country = int.Parse(columns[4]),
-                    FE= int.Parse(columns[5]),
+                    Country = double.Parse(columns[3]),
+                    Cyl = int.Parse(columns[4]),
+                    City= int.Parse(columns[5]),
                     Hwy = int.Parse(columns[6]),
                     Combined = int.Parse(columns[7])
                 };
