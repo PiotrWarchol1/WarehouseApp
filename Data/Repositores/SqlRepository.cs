@@ -42,6 +42,7 @@ namespace WarehouseApp.Repositores
         {
             _dbContext.SaveChanges();
         }
+
     }
 }
 

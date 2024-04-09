@@ -1,227 +1,130 @@
-﻿using WarehouseApp.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using WarehouseApp.Components.CsvReader;
+using WarehouseApp.Data;
+using WarehouseApp.Entities;
 using WarehouseApp.Repositores;
-using WarehouseApp.DataProviders;
 
 namespace WarehouseApp.Comunication
 {
     public class UserComunication : IUserComunication
     {
-        private IRepository<Ski> _skiRepository;
-        private IRepository<Helmet> _helmetRepository;
-        private IHelmetsProvider _helmetsProvider;
+         ICsvReader _csvReader;
+         IRepository<Helmet> _helmetRepository;
+         WarehouseAppDbContext _warehouseAppDbContext;
 
-        public UserComunication(
-           IRepository<Ski> skiRepository,
-           IRepository<Helmet> helmetsRepository,
-           IHelmetsProvider helmetsProvider)
+        public UserComunication(ICsvReader csvReader, IRepository<Helmet> helmetsRepository, WarehouseAppDbContext warehouseAppDbContext)
         {
-            _skiRepository = skiRepository;
             _helmetRepository = helmetsRepository;
-            _helmetsProvider = helmetsProvider;
+            _warehouseAppDbContext = warehouseAppDbContext;
+            _csvReader = csvReader;
         }
-        public void Comunication()
+
+        public void OnItemAdded(object? sender, Helmet e)
         {
-           
-            ActivateEventListeners();
-
-            ShowMenu();
-
-            var quit = false;
-
-            while (quit != true)
-            {
-                var input = Console.ReadLine();
-
-                switch (input)
-                {
-                    case "1":
-                        AddEquipment();
-                        break;
-                    case "2":
-                        RemoveEquipment();
-                        break;
-                    case "3":
-                        WriteAllToConsole();
-                        break;
-                    case "4":
-                        GetMinimumPriceOfAllHelmets();
-                        break;
-                    case "5":
-                        OrderByName();
-                        break;
-                    case "6":
-                        WhereColorIsRed();
-                        break;
-                    case "7":
-                        GetUniqueHelmetColors();
-                        break;
-                    case "q":
-                        quit = true;
-                        break;
-                    default:
-                        Console.WriteLine("wrong option");
-                        break;
-                }
-            }
-        }
-        void EquipmentRepositoryOnItemAdded(object? sender, Equipment e)
-        {
-            string equipment = ($"Data: {DateTime.Now}, Equipment added => {e.Type} from {sender?.GetType().Name}");
-            Console.WriteLine(equipment);
+            string helmet = ($"Data: {DateTime.Now}, Helmet added => {e.Name} from {sender?.GetType().Name}");
+            Console.WriteLine(helmet);
             using (var writer = File.AppendText("Warehouse.txt"))
             {
-                writer.WriteLine(equipment);
+                writer.WriteLine(helmet);
             }
         }
 
-        void EquipmentRepositoryOnItemRemove(object? sender, Equipment e)
+        public void OnItemRemove(object? sender, Helmet e)
         {
-            string equipment = $"Date:  {DateTime.Now}, Equipment remove => {e.Type}  from {sender?.GetType().Name}";
-            Console.WriteLine(equipment);
+            string helmet = $"Date:  {DateTime.Now}, Helmet remove => {e.Name}  from {sender?.GetType().Name}";
+            Console.WriteLine(helmet);
             using (var writer = File.AppendText("Warehouse.txt"))
             {
-                writer.WriteLine(equipment);
+                writer.WriteLine(helmet);
             }
         }
 
-        void AddEquipment()
+        public void AddHelmet()
         {
-            Console.WriteLine("Please provide the name of the equipment: Ski, Helmet");
+            Console.WriteLine("Please provide the name of the Helmet");
             var item = Console.ReadLine();
-            if (item.ToLower().Contains("ski"))
-            {
-                var ski = new Ski
-                {
-                    Type = item,
-                    Name = item,
-                    Color = "black",
-                    ListPrice = 1100
-                };
-                _skiRepository.Add(ski);
-                _skiRepository.Save();
-            }
-            else if (item.ToLower().Contains("helmet"))
+            if (item.ToLower().Contains("helmet"))
             {
                 var helmet = new Helmet()
                 {
-                    Type = item,
+                    Manufacturer = item,
                     Name = item,
-                    Color = "Red",
-                    ListPrice = 1200
+                    City = 1,
+                    Hwy = 1200
                 };
-                _helmetRepository.Add(helmet);
-                _helmetRepository.Save();
+                _warehouseAppDbContext.Helmets.Add(helmet);
+                _warehouseAppDbContext.SaveChanges();
+
+
             }
         }
-       
-        void RemoveEquipment()
+
+        public void RemoveHelmet()
         {
-            Console.WriteLine("Enter the number of equipment you want to delete");
+            Console.WriteLine("Enter the number of element you want to delete");
             try
             {
-                _skiRepository.Remove(_skiRepository.GetById(int.Parse(Console.ReadLine())));
-                _skiRepository.Save();
+                var itemToRemove = _warehouseAppDbContext.Helmets.SingleOrDefault(helmet => helmet.Id == int.Parse(Console.ReadLine()));
+                if (itemToRemove != null)
+                {
+                    _warehouseAppDbContext.Helmets.Remove(itemToRemove);
+                    _warehouseAppDbContext.SaveChanges();
+                }
             }
             catch
             {
                 Console.WriteLine("wrong option");
 
             }
-            Console.WriteLine("Enter the number of equipment you want to delete");
-            try
-            {
-                _helmetRepository.Remove(_helmetRepository.GetById(int.Parse(Console.ReadLine())));
-                _helmetRepository.Save();
-            }
-            catch
-            {
-                Console.WriteLine("wrong option");
-
-            }
         }
 
-        void WriteAllToConsole()
+        public void ReadAllHelmetsFromDb()
         {
-            Show("Ski", _skiRepository);
-            Show("Helmets", _helmetRepository);
+          
 
-        }
-        void Show(string equipmentName, IReadRepository<Equipment> from)
-        {
-            Console.WriteLine(equipmentName + ":");
-            foreach (var eq in from.GetAll())
+            var helmetsFromDb = _warehouseAppDbContext.Helmets.ToList();
+
+            foreach (var helmetFromDb in helmetsFromDb)
             {
-                Console.WriteLine(eq);
+                Console.WriteLine($"\t{helmetFromDb.Id}: {helmetFromDb.Name}: {helmetFromDb.Manufacturer}");
             }
         }
-
-        void OrderByName()
+        public void InsertData()
         {
-            Console.WriteLine("OrderByName");
-            foreach (var equipment in _helmetsProvider.OrderByName())
+            var helmets = _csvReader.ProcessHelmets("Resources\\Files\\Fuel.csv");
+
+
+            foreach (var helmet in helmets)
             {
-                Console.WriteLine(equipment);
-            }
-        }
+                _warehouseAppDbContext.Helmets.Add(new Helmet()
+                {
 
-        void GetMinimumPriceOfAllHelmets()
+                    Year = helmet.Year,
+                    Manufacturer = helmet.Manufacturer,
+                    Name = helmet.Name,
+                    Country = helmet.Country,
+                    Cyl = helmet.Cyl,
+                    City = helmet.City,
+                    Hwy = helmet.Hwy,
+                    Combined = helmet.Combined
+                });
+            }
+            _warehouseAppDbContext.SaveChanges();
+        }
+        public void UpdateHelmet()
         {
+/*            Console.WriteLine("Name: ");
+            var name = Console.ReadLine();
+
+            var helmet = _helmetRepository.GetById(name);
+            Console.WriteLine($"Id: {helmet.Id.ToString()}");
             Console.WriteLine();
-            Console.WriteLine("GetMinimumPriceOfAllHelmets");
-            Console.WriteLine(_helmetsProvider.GetMinimumPriceOfAllHelmets());
-        }
-
-        void WhereColorIsRed()
-        {
-            Console.WriteLine();
-            Console.WriteLine("WhereColorIs Red");
-            foreach (var equipment in _helmetsProvider.WhereColorIs("Red"))
-            {
-                Console.WriteLine(equipment);
-            }
-        }
-
-        void GetUniqueHelmetColors()
-        {
-            Console.WriteLine();
-            Console.WriteLine("GetUniqueHelmetColors");
-            foreach (var equipment in _helmetsProvider.GetUniqueHelmetColors())
-            {
-                Console.WriteLine(equipment);
-            }
-        }
-        void ShowMenu()
-        {
-
-            Console.WriteLine("----| Welcame to Warehause Application |----");
-            Console.WriteLine("     ----------------------------------     ");
-            Console.WriteLine("Warehause Application used to rent ski equipment");
-            Console.WriteLine("------------------------------------------------");
-            Console.WriteLine("Select what you want to do below by selecting the appropriate action number   ");
-            Console.WriteLine("                                            ");
-            Console.WriteLine("Press 1 if you want to return your equipment");
-            Console.WriteLine("Press 2 if you want to rent equipment");
-            Console.WriteLine("Press 3 if you want read the amount of equipment in the warehouse");
-            Console.WriteLine("Press 4 if you want minimum price of all helmets");
-            Console.WriteLine("Press 5 if you want by name");
-            Console.WriteLine("Press 6 if you want color red");
-            Console.WriteLine("Press 7 if you want unique helmet colors");
-            Console.WriteLine("Press q if you want quit");
-            Console.WriteLine("                        ");
-
-        }
-
-        void ActivateEventListeners()
-        {
-            _helmetRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
-            _helmetRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
-
-            _skiRepository.ItemAdded += EquipmentRepositoryOnItemAdded;
-            _skiRepository.ItemRemove += EquipmentRepositoryOnItemRemove;
-            _skiRepository.Save();
+            Console.WriteLine("New Name: ");
+            name = Console.ReadLine();
+            helmet.Name = name;
+            _helmetRepository.Save();*/
 
         }
 
     }
-
 }
