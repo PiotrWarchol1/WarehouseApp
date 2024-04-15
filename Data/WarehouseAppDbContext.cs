@@ -12,6 +12,7 @@ namespace WarehouseApp.Data
 
         }
         public DbSet<Helmet> Helmets{ get; set; }
+        public DbSet<IEntity> Items { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder.LogTo(Console.WriteLine);

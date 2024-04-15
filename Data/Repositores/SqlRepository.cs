@@ -43,6 +43,10 @@ namespace WarehouseApp.Repositores
             _dbContext.SaveChanges();
         }
 
+        public T GetByName(string id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

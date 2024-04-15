@@ -4,7 +4,8 @@ namespace WarehouseApp.Repositores
 {
     public interface IReadRepository<out T> where T : class, IEntity 
     {
-        IEnumerable<T> GetAll();
-        T GetById(int id);
+        public IEnumerable<T> GetAll();
+        public T? GetById(int id);
+        public T? GetByName(string id);
     }
 }

@@ -1,12 +1,13 @@
 ﻿using System.Text.Json;
+using WarehouseApp.Data;
 using WarehouseApp.Entities;
 
 namespace WarehouseApp.Repositores
 {
     public class ListRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
+        private readonly WarehouseAppDbContext _dbContext;
         private List<T> _items = new List<T>();
-
         public event EventHandler<T>? ItemAdded;
         public event EventHandler<T>? ItemRemove;
         public IEnumerable<T> GetAll()
@@ -21,7 +22,18 @@ namespace WarehouseApp.Repositores
             }
             return _items;
         }
-        public T GetById(int id)
+        public ListRepository(WarehouseAppDbContext dbContext)
+        {
+            _dbContext = dbContext;
+            _dbContext.Database.EnsureCreated();
+
+        }
+        public T? GetByName(string name)
+        {
+            return _dbContext.Items.FirstOrDefault(x => x.Name == name);
+        }
+
+        public T? GetById(int id)
         {
             return _items[id-1];
         }

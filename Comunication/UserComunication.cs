@@ -113,16 +113,16 @@ namespace WarehouseApp.Comunication
         }
         public void UpdateHelmet()
         {
-/*            Console.WriteLine("Name: ");
+            Console.WriteLine("Name: ");
             var name = Console.ReadLine();
 
-            var helmet = _helmetRepository.GetById(name);
+            var helmet = _helmetRepository.GetByName(name);
             Console.WriteLine($"Id: {helmet.Id.ToString()}");
             Console.WriteLine();
             Console.WriteLine("New Name: ");
             name = Console.ReadLine();
             helmet.Name = name;
-            _helmetRepository.Save();*/
+            _helmetRepository.Save();
 
         }
 
