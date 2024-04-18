@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WarehouseApp.Components.CsvReader;
+﻿using WarehouseApp.Components.CsvReader;
 using WarehouseApp.Data;
 using WarehouseApp.Entities;
 using WarehouseApp.Repositores;
@@ -52,8 +51,8 @@ namespace WarehouseApp.Comunication
                     City = 1,
                     Hwy = 1200
                 };
-                _warehouseAppDbContext.Helmets.Add(helmet);
-                _warehouseAppDbContext.SaveChanges();
+                _helmetRepository.Add(helmet);
+                _helmetRepository.Save();
 
 
             }
@@ -61,20 +60,11 @@ namespace WarehouseApp.Comunication
 
         public void RemoveHelmet()
         {
-            Console.WriteLine("Enter the number of element you want to delete");
-            try
+            var itemToRemove = _warehouseAppDbContext.Helmets.SingleOrDefault(helmet => helmet.Id == int.Parse(Console.ReadLine()));
+            if (itemToRemove != null)
             {
-                var itemToRemove = _warehouseAppDbContext.Helmets.SingleOrDefault(helmet => helmet.Id == int.Parse(Console.ReadLine()));
-                if (itemToRemove != null)
-                {
-                    _warehouseAppDbContext.Helmets.Remove(itemToRemove);
-                    _warehouseAppDbContext.SaveChanges();
-                }
-            }
-            catch
-            {
-                Console.WriteLine("wrong option");
-
+                _warehouseAppDbContext.Helmets.Remove(itemToRemove);
+                _warehouseAppDbContext.SaveChanges();
             }
         }
 
@@ -96,7 +86,7 @@ namespace WarehouseApp.Comunication
 
             foreach (var helmet in helmets)
             {
-                _warehouseAppDbContext.Helmets.Add(new Helmet()
+                _helmetRepository.Add(new Helmet
                 {
 
                     Year = helmet.Year,
@@ -109,7 +99,7 @@ namespace WarehouseApp.Comunication
                     Combined = helmet.Combined
                 });
             }
-            _warehouseAppDbContext.SaveChanges();
+            _helmetRepository.Save();
         }
         public void UpdateHelmet()
         {
@@ -117,7 +107,6 @@ namespace WarehouseApp.Comunication
             var name = Console.ReadLine();
 
             var helmet = _helmetRepository.GetByName(name);
-            Console.WriteLine($"Id: {helmet.Id.ToString()}");
             Console.WriteLine();
             Console.WriteLine("New Name: ");
             name = Console.ReadLine();

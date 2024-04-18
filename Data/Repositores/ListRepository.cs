@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using Microsoft.EntityFrameworkCore;
 using WarehouseApp.Data;
 using WarehouseApp.Entities;
 
@@ -7,35 +7,29 @@ namespace WarehouseApp.Repositores
     public class ListRepository<T> : IRepository<T> where T : class, IEntity, new()
     {
         private readonly WarehouseAppDbContext _dbContext;
+        private readonly DbSet<T> _dbSet;
         private List<T> _items = new List<T>();
         public event EventHandler<T>? ItemAdded;
         public event EventHandler<T>? ItemRemove;
-        public IEnumerable<T> GetAll()
-        {
-            if (File.Exists("items.json"))
-            {
-                using (var reader = File.OpenText("items.json"))
-                {
-                    var line = reader.ReadLine();
-                    _items = JsonSerializer.Deserialize<List<T>>(line);
-                }
-            }
-            return _items;
-        }
+
         public ListRepository(WarehouseAppDbContext dbContext)
         {
             _dbContext = dbContext;
             _dbContext.Database.EnsureCreated();
-
+            _dbSet = _dbContext.Set<T>();
         }
         public T? GetByName(string name)
         {
-            return _dbContext.Items.FirstOrDefault(x => x.Name == name);
+            return _dbSet.FirstOrDefault(x => x.Name == name);
         }
 
         public T? GetById(int id)
         {
             return _items[id-1];
+        }
+        public IEnumerable<T> GetAll()
+        {
+            return _dbSet.ToList();
         }
         public void Add(T _item)
         {
@@ -54,11 +48,7 @@ namespace WarehouseApp.Repositores
         }
         public void Save()
         {
-            using (StreamWriter writer = new StreamWriter($"items.json", false))
-            {
-                var json = JsonSerializer.Serialize(_items);
-                writer.WriteLine(json);
-            }
+            _dbContext.SaveChanges();
         }
     }
 }

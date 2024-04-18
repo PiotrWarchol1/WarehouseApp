@@ -14,10 +14,7 @@ namespace WarehouseApp.Repositores
         {
             _dbContext = dbContext;
             _dbSet = dbContext.Set<T>();
-
         }
-
-
         public IEnumerable<T> GetAll()
         {
             return _dbSet.ToList();

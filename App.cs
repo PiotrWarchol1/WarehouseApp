@@ -37,8 +37,8 @@ namespace WarehouseApp
                 Console.WriteLine("Press 1 if you want to add helmets");
                 Console.WriteLine("Press 2 if you want to remove helmets");
                 Console.WriteLine("Press 3 if you want read all helmets from db");
-                Console.WriteLine("Press 4 if you want minimum price of all helmets");
-                Console.WriteLine("Press 5 if you want by name");
+                Console.WriteLine("Press 4 if you want insert data");
+                Console.WriteLine("Press 5 if you want update helmet");
                 Console.WriteLine("Press q if you want quit");
                 Console.WriteLine("                        ");
 
