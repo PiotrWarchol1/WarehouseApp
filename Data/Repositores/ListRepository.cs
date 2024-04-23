@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using WarehouseApp.Data;
 using WarehouseApp.Entities;
 
@@ -8,7 +9,6 @@ namespace WarehouseApp.Repositores
     {
         private readonly WarehouseAppDbContext _dbContext;
         private readonly DbSet<T> _dbSet;
-        private List<T> _items = new List<T>();
         public event EventHandler<T>? ItemAdded;
         public event EventHandler<T>? ItemRemove;
 
@@ -20,12 +20,11 @@ namespace WarehouseApp.Repositores
         }
         public T? GetByName(string name)
         {
-            return _dbSet.FirstOrDefault(x => x.Name == name);
+            return _dbSet.FirstOrDefault(h => h.Name.Equals(name));
         }
-
         public T? GetById(int id)
         {
-            return _items[id-1];
+            return _dbSet.Find(id);
         }
         public IEnumerable<T> GetAll()
         {
@@ -33,17 +32,12 @@ namespace WarehouseApp.Repositores
         }
         public void Add(T _item)
         {
-            _items.Add(_item);
-            _item.Id = _items.Count;
+            _dbSet.Add(_item);
             ItemAdded?.Invoke(this, _item);
         }       
         public void Remove(T _item)
-        {
-            _items.RemoveAt(_item.Id - 1);
-            for (int i = 0; i < _items.Count; i++)
-            {
-                _items[i].Id = i + 1;
-            }
+        { 
+            _dbSet.Remove(_item);
             ItemRemove?.Invoke(this, _item);
         }
         public void Save()

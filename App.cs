@@ -23,28 +23,12 @@ namespace WarehouseApp
             _helmetRepository.ItemAdded += _userComunication.OnItemAdded;
             _helmetRepository.ItemRemove += _userComunication.OnItemRemove;
 
+            ShowMenu();
+
             var quit = false;
+
             while (quit != true)
-
             {
-
-                Console.WriteLine("----| Welcame to Warehause Application |----");
-                Console.WriteLine("     ----------------------------------     ");
-                Console.WriteLine("Warehause Application used to rent ski equipment");
-                Console.WriteLine("------------------------------------------------");
-                Console.WriteLine("Select what you want to do below by selecting the appropriate action number   ");
-                Console.WriteLine("                                            ");
-                Console.WriteLine("Press 1 if you want to add helmets");
-                Console.WriteLine("Press 2 if you want to remove helmets");
-                Console.WriteLine("Press 3 if you want read all helmets from db");
-                Console.WriteLine("Press 4 if you want insert data");
-                Console.WriteLine("Press 5 if you want update helmet");
-                Console.WriteLine("Press q if you want quit");
-                Console.WriteLine("                        ");
-
-
-
-
                 var input = Console.ReadLine();
 
                 switch (input)
@@ -61,11 +45,11 @@ namespace WarehouseApp
                     case "4":
                         _userComunication.InsertData();
                         break;
-                    case "5": 
-                        _userComunication.UpdateHelmet(); 
+                    case "5":
+                        _userComunication.UpdateHelmet();
                         break;
                     case "q":
-                        quit= true;
+                        quit = true;
                         break;
                     default:
                         Console.WriteLine("wrong option");
@@ -73,5 +57,26 @@ namespace WarehouseApp
                 }
             }
         }
-    }    
+
+        void ShowMenu()
+        {
+
+            Console.WriteLine("----| Welcame to Warehause Application |----");
+            Console.WriteLine("     ----------------------------------     ");
+            Console.WriteLine("Warehause Application used to rent ski equipment");
+            Console.WriteLine("------------------------------------------------");
+            Console.WriteLine("Select what you want to do below by selecting the appropriate action number   ");
+            Console.WriteLine("                                            ");
+            Console.WriteLine("Press 1 if you want to add helmets");
+            Console.WriteLine("Press 2 if you want to remove helmets");
+            Console.WriteLine("Press 3 if you want read all helmets from db");
+            Console.WriteLine("Press 4 if you want insert data");
+            Console.WriteLine("Press 5 if you want update helmet");
+            Console.WriteLine("Press q if you want quit");
+            Console.WriteLine("                        ");
+
+
+        }
+    }
+       
 }

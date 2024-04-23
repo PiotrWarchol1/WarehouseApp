@@ -13,11 +13,17 @@ namespace WarehouseApp.Repositores
         public SqlRepository(DbContext dbContext)
         {
             _dbContext = dbContext;
+            _dbContext.Database.EnsureCreated();
             _dbSet = dbContext.Set<T>();
         }
         public IEnumerable<T> GetAll()
         {
             return _dbSet.ToList();
+        }
+        public T GetByName(string name)
+        {
+            
+            return GetAll().FirstOrDefault(predicate: h => h.Name == name);
         }
         public T GetById(int id)
         {
@@ -38,11 +44,6 @@ namespace WarehouseApp.Repositores
         public void Save()
         {
             _dbContext.SaveChanges();
-        }
-
-        public T GetByName(string id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

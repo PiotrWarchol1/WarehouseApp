@@ -7,9 +7,9 @@ namespace WarehouseApp.Comunication
 {
     public class UserComunication : IUserComunication
     {
-         ICsvReader _csvReader;
-         IRepository<Helmet> _helmetRepository;
-         WarehouseAppDbContext _warehouseAppDbContext;
+        ICsvReader _csvReader;
+        IRepository<Helmet> _helmetRepository;
+        WarehouseAppDbContext _warehouseAppDbContext;
 
         public UserComunication(ICsvReader csvReader, IRepository<Helmet> helmetsRepository, WarehouseAppDbContext warehouseAppDbContext)
         {
@@ -40,37 +40,53 @@ namespace WarehouseApp.Comunication
 
         public void AddHelmet()
         {
-            Console.WriteLine("Please provide the name of the Helmet");
-            var item = Console.ReadLine();
-            if (item.ToLower().Contains("helmet"))
+            Console.WriteLine("Year: ");
+            var year = int.Parse(Console.ReadLine());
+            Console.WriteLine("Manufacturer: ");
+            var manufacturer = Console.ReadLine();
+            Console.WriteLine("Name: ");
+            var name = Console.ReadLine();
+            Console.WriteLine("Country: ");
+            var country = double.Parse(Console.ReadLine());
+            Console.WriteLine("Cyl: ");
+            var cyl = int.Parse(Console.ReadLine());
+            Console.WriteLine("City: ");
+            var city = int.Parse(Console.ReadLine());
+            Console.WriteLine("Hwy: ");
+            var hwy = int.Parse(Console.ReadLine());
+            Console.WriteLine("Combined: ");
+            var combined = int.Parse(Console.ReadLine());
+
+
+            _helmetRepository.Add(new Helmet
             {
-                var helmet = new Helmet()
-                {
-                    Manufacturer = item,
-                    Name = item,
-                    City = 1,
-                    Hwy = 1200
-                };
-                _helmetRepository.Add(helmet);
-                _helmetRepository.Save();
+                Year = year,
+                Manufacturer = manufacturer,
+                Name = name,
+                Country = country,
+                Cyl = cyl,
+                City = city,
+                Hwy = hwy,
+                Combined = combined
 
-
-            }
+            });
+            _helmetRepository.Save();
         }
 
         public void RemoveHelmet()
         {
-            var itemToRemove = _warehouseAppDbContext.Helmets.SingleOrDefault(helmet => helmet.Id == int.Parse(Console.ReadLine()));
-            if (itemToRemove != null)
-            {
-                _warehouseAppDbContext.Helmets.Remove(itemToRemove);
-                _warehouseAppDbContext.SaveChanges();
-            }
+            Console.WriteLine("Helmet: ");
+            var name = Console.ReadLine();
+
+            var helmet = _helmetRepository.GetByName(name);
+
+            _helmetRepository.Remove(helmet);
+            _helmetRepository.Save();
         }
 
         public void ReadAllHelmetsFromDb()
         {
-          
+
 
             var helmetsFromDb = _warehouseAppDbContext.Helmets.ToList();
 
@@ -101,18 +117,24 @@ namespace WarehouseApp.Comunication
             }
             _helmetRepository.Save();
         }
-        public void UpdateHelmet()
+
+        public void UpdateHelmet() {
+            Console.WriteLine(_helmetRepository.GetById(327).Name);
+            /*    Console
+                    .WriteLine(_helmetRepository.GetByName("Red").Name);*/
+
+            Console.WriteLine(_helmetRepository.GetByName("Black").Name);
+  /*      {
+            var black = _warehouseAppDbContext.ReadFirst("Name");
+            Console.WriteLine(_helmetRepository.Name);
+            _helmetRepository.Name = "Byk";
+            _warehouseAppDbContext.SaveChanges();*/
+        }
+
+        private Helmet? ReadFirst(string name)
         {
-            Console.WriteLine("Name: ");
-            var name = Console.ReadLine();
 
-            var helmet = _helmetRepository.GetByName(name);
-            Console.WriteLine();
-            Console.WriteLine("New Name: ");
-            name = Console.ReadLine();
-            helmet.Name = name;
-            _helmetRepository.Save();
-
+            return _warehouseAppDbContext.Helmets.FirstOrDefault(h => h.Name == name);
         }
 
     }
