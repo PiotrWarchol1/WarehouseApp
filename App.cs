@@ -1,27 +1,29 @@
 ﻿using WarehouseApp.Components.CsvReader;
+using WarehouseApp.Entities;
 using WarehouseApp.Data;
-using Helmet = WarehouseApp.Entities.Helmet;
-using WarehouseApp.Comunication;
+using WarehouseApp.UserCommunication;
 using WarehouseApp.Repositores;
 
 namespace WarehouseApp
 {
     public class App : IApp
     {
-        private readonly IUserComunication _userComunication;
+        
+        private readonly IUserCommunication _userCommunication;
         private readonly IRepository<Helmet> _helmetRepository;
         private readonly WarehouseAppDbContext _warehouseAppDbContext;
-        public App(ICsvReader csvReader, IRepository<Helmet> helmetsRepository, IUserComunication userComunication, WarehouseAppDbContext warehouseAppDbContext)
+        public App(IRepository<Helmet> helmetsRepository, IUserCommunication userCommunication, WarehouseAppDbContext warehouseAppDbContext)
         {
-            _userComunication = userComunication;
+            
+            _userCommunication = userCommunication;
             _warehouseAppDbContext = warehouseAppDbContext;
             _helmetRepository = helmetsRepository;
-            _warehouseAppDbContext.Database.EnsureCreated();
+            //_warehouseAppDbContext.Database.EnsureCreated();
         }
         public void Run()
         {
-            _helmetRepository.ItemAdded += _userComunication.OnItemAdded;
-            _helmetRepository.ItemRemove += _userComunication.OnItemRemove;
+            _helmetRepository.ItemAdded += _userCommunication.OnItemAdded;
+            _helmetRepository.ItemRemove += _userCommunication.OnItemRemove;
 
             ShowMenu();
 
@@ -34,19 +36,19 @@ namespace WarehouseApp
                 switch (input)
                 {
                     case "1":
-                        _userComunication.AddHelmet();
+                        _userCommunication.AddHelmet();
                         break;
                     case "2":
-                        _userComunication.RemoveHelmet();
+                        _userCommunication.RemoveHelmet();
                         break;
                     case "3":
-                        _userComunication.ReadAllHelmetsFromDb();
+                        _userCommunication.ReadAllHelmetsFromDb();
                         break;
                     case "4":
-                        _userComunication.InsertData();
+                        _userCommunication.InsertData();
                         break;
                     case "5":
-                        _userComunication.UpdateHelmet();
+                        _userCommunication.UpdateHelmet();
                         break;
                     case "q":
                         quit = true;

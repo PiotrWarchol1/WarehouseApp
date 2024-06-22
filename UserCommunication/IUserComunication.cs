@@ -1,8 +1,8 @@
 ﻿using WarehouseApp.Entities;
 
-namespace WarehouseApp.Comunication
+namespace WarehouseApp.UserCommunication
 {
-    public interface IUserComunication
+    public interface IUserCommunication
     {
         void AddHelmet();
         void InsertData();

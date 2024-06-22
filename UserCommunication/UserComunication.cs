@@ -3,15 +3,15 @@ using WarehouseApp.Data;
 using WarehouseApp.Entities;
 using WarehouseApp.Repositores;
 
-namespace WarehouseApp.Comunication
+namespace WarehouseApp.UserCommunication
 {
-    public class UserComunication : IUserComunication
+    public class UserCommunication : IUserCommunication
     {
         ICsvReader _csvReader;
         IRepository<Helmet> _helmetRepository;
         WarehouseAppDbContext _warehouseAppDbContext;
 
-        public UserComunication(ICsvReader csvReader, IRepository<Helmet> helmetsRepository, WarehouseAppDbContext warehouseAppDbContext)
+        public UserCommunication(ICsvReader csvReader, IRepository<Helmet> helmetsRepository, WarehouseAppDbContext warehouseAppDbContext)
         {
             _helmetRepository = helmetsRepository;
             _warehouseAppDbContext = warehouseAppDbContext;
@@ -118,23 +118,22 @@ namespace WarehouseApp.Comunication
             _helmetRepository.Save();
         }
 
-        public void UpdateHelmet() {
-            Console.WriteLine(_helmetRepository.GetById(327).Name);
-            /*    Console
-                    .WriteLine(_helmetRepository.GetByName("Red").Name);*/
-
-            Console.WriteLine(_helmetRepository.GetByName("Black").Name);
-  /*      {
-            var black = _warehouseAppDbContext.ReadFirst("Name");
-            Console.WriteLine(_helmetRepository.Name);
-            _helmetRepository.Name = "Byk";
-            _warehouseAppDbContext.SaveChanges();*/
-        }
-
-        private Helmet? ReadFirst(string name)
+        public void UpdateHelmet() 
         {
+            Console.WriteLine("Name: ");
+            var name = Console.ReadLine();
 
-            return _warehouseAppDbContext.Helmets.FirstOrDefault(h => h.Name == name);
+            var helmet = _helmetRepository.GetByName(name);
+            Console.WriteLine($"Id: {helmet.Id.ToString()}");
+            Console.WriteLine($"Manufacturer: {helmet.Manufacturer.ToString()}");
+            Console.WriteLine($"Name: {helmet.Name.ToString()}");
+            Console.WriteLine($"Combined: {helmet.Combined.ToString()}");
+            Console.WriteLine();
+            Console.WriteLine("New Name: ");
+            name = Console.ReadLine();
+            helmet.Name = name;
+            _helmetRepository.Save();
+
         }
 
     }

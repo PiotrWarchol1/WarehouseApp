@@ -9,6 +9,7 @@ namespace WarehouseApp.Repositores
     {
         private readonly WarehouseAppDbContext _dbContext;
         private readonly DbSet<T> _dbSet;
+
         public event EventHandler<T>? ItemAdded;
         public event EventHandler<T>? ItemRemove;
 
@@ -20,7 +21,7 @@ namespace WarehouseApp.Repositores
         }
         public T? GetByName(string name)
         {
-            return _dbSet.FirstOrDefault(h => h.Name.Equals(name));
+            return _dbSet.FirstOrDefault(x => x.Name == name);
         }
         public T? GetById(int id)
         {
