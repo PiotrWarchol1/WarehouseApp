@@ -122,7 +122,6 @@ namespace WarehouseApp.UserCommunication
         {
             Console.WriteLine("Name: ");
             var name = Console.ReadLine();
-
             var helmet = _helmetRepository.GetByName(name);
             Console.WriteLine($"Id: {helmet.Id.ToString()}");
             Console.WriteLine($"Manufacturer: {helmet.Manufacturer.ToString()}");

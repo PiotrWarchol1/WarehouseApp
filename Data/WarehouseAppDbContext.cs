@@ -10,7 +10,6 @@ namespace WarehouseApp.Data
             : base(options) 
         {
         }
-        public DbSet<Helmet> Helmets{ get; set; }
-        
+        public DbSet<Helmet> Helmets{ get; set; } 
     }
 }
