@@ -86,8 +86,6 @@ namespace WarehouseApp.UserCommunication
 
         public void ReadAllHelmetsFromDb()
         {
-
-
             var helmetsFromDb = _warehouseAppDbContext.Helmets.ToList();
 
             foreach (var helmetFromDb in helmetsFromDb)
@@ -126,14 +124,11 @@ namespace WarehouseApp.UserCommunication
             Console.WriteLine($"Id: {helmet.Id.ToString()}");
             Console.WriteLine($"Manufacturer: {helmet.Manufacturer.ToString()}");
             Console.WriteLine($"Name: {helmet.Name.ToString()}");
-            Console.WriteLine($"Combined: {helmet.Combined.ToString()}");
             Console.WriteLine();
             Console.WriteLine("New Name: ");
             name = Console.ReadLine();
             helmet.Name = name;
             _helmetRepository.Save();
-
         }
-
     }
 }
