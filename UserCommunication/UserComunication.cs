@@ -9,12 +9,10 @@ namespace WarehouseApp.UserCommunication
     {
         ICsvReader _csvReader;
         IRepository<Helmet> _helmetRepository;
-        WarehouseAppDbContext _warehouseAppDbContext;
 
         public UserCommunication(ICsvReader csvReader, IRepository<Helmet> helmetsRepository, WarehouseAppDbContext warehouseAppDbContext)
         {
             _helmetRepository = helmetsRepository;
-            _warehouseAppDbContext = warehouseAppDbContext;
             _csvReader = csvReader;
         }
 
@@ -86,7 +84,7 @@ namespace WarehouseApp.UserCommunication
 
         public void ReadAllHelmetsFromDb()
         {
-            var helmetsFromDb = _warehouseAppDbContext.Helmets.ToList();
+            var helmetsFromDb = _helmetRepository.GetAll();
 
             foreach (var helmetFromDb in helmetsFromDb)
             {

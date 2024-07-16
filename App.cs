@@ -8,17 +8,13 @@ namespace WarehouseApp
 {
     public class App : IApp
     {
-        
         private readonly IUserCommunication _userCommunication;
         private readonly IRepository<Helmet> _helmetRepository;
-        private readonly WarehouseAppDbContext _warehouseAppDbContext;
+        
         public App(IRepository<Helmet> helmetsRepository, IUserCommunication userCommunication, WarehouseAppDbContext warehouseAppDbContext)
         {
-            
             _userCommunication = userCommunication;
-            _warehouseAppDbContext = warehouseAppDbContext;
-            _helmetRepository = helmetsRepository;
-            //_warehouseAppDbContext.Database.EnsureCreated();
+            _helmetRepository = helmetsRepository;  
         }
         public void Run()
         {
