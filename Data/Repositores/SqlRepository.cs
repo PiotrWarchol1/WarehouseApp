@@ -22,7 +22,6 @@ namespace WarehouseApp.Repositores
         }
         public T GetByName(string name)
         {
-            
             return GetAll().FirstOrDefault(predicate: h => h.Name == name);
         }
         public T GetById(int id)
@@ -32,13 +31,11 @@ namespace WarehouseApp.Repositores
         public void Add(T item)
         {
             _dbSet.Add(item);
-
             ItemAdded?.Invoke(this, item);
         }
         public void Remove(T item)
         {
             _dbSet.Remove(item);
- 
             ItemRemove?.Invoke(this, item);
         }
         public void Save()

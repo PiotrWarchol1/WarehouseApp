@@ -10,7 +10,7 @@ namespace WarehouseApp
     {
         private readonly IUserCommunication _userCommunication;
         private readonly IRepository<Helmet> _helmetRepository;
-        
+
         public App(IRepository<Helmet> helmetsRepository, IUserCommunication userCommunication, WarehouseAppDbContext warehouseAppDbContext)
         {
             _userCommunication = userCommunication;
@@ -55,10 +55,8 @@ namespace WarehouseApp
                 }
             }
         }
-
         void ShowMenu()
         {
-
             Console.WriteLine("----| Welcame to Warehause Application |----");
             Console.WriteLine("     ----------------------------------     ");
             Console.WriteLine("Warehause Application used to rent ski equipment");
@@ -72,9 +70,6 @@ namespace WarehouseApp
             Console.WriteLine("Press 5 if you want update helmet");
             Console.WriteLine("Press q if you want quit");
             Console.WriteLine("                        ");
-
-
         }
-    }
-       
+    }   
 }

@@ -1,5 +1,4 @@
-﻿using System.Runtime.CompilerServices;
-using WarehouseApp.Components.CsvReader.Models;
+﻿using WarehouseApp.Components.CsvReader.Models;
 
 namespace WarehouseApp.Components.CsvReader.Extensions
 {
