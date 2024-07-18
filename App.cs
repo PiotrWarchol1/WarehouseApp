@@ -55,6 +55,7 @@ namespace WarehouseApp
                 }
             }
         }
+
         void ShowMenu()
         {
             Console.WriteLine("----| Welcame to Warehause Application |----");

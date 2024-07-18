@@ -15,6 +15,7 @@ namespace WarehouseApp.UserCommunication
             _helmetRepository = helmetsRepository;
             _csvReader = csvReader;
         }
+
         public void OnItemAdded(object? sender, Helmet e)
         {
             string helmet = ($"Data: {DateTime.Now}, Helmet added => {e.Name} from {sender?.GetType().Name}");
@@ -24,6 +25,7 @@ namespace WarehouseApp.UserCommunication
                 writer.WriteLine(helmet);
             }
         }
+
         public void OnItemRemove(object? sender, Helmet e)
         {
             string helmet = $"Date:  {DateTime.Now}, Helmet remove => {e.Name}  from {sender?.GetType().Name}";
@@ -33,6 +35,7 @@ namespace WarehouseApp.UserCommunication
                 writer.WriteLine(helmet);
             }
         }
+
         public void AddHelmet()
         {
             Console.WriteLine("Year: ");
@@ -66,6 +69,7 @@ namespace WarehouseApp.UserCommunication
             });
             _helmetRepository.Save();
         }
+
         public void RemoveHelmet()
         {
             Console.WriteLine("Helmet: ");
@@ -76,6 +80,7 @@ namespace WarehouseApp.UserCommunication
             _helmetRepository.Remove(helmet);
             _helmetRepository.Save();
         }
+
         public void ReadAllHelmetsFromDb()
         {
             var helmetsFromDb = _helmetRepository.GetAll();
@@ -85,6 +90,7 @@ namespace WarehouseApp.UserCommunication
                 Console.WriteLine($"\t{helmetFromDb.Id}: {helmetFromDb.Name}: {helmetFromDb.Manufacturer}");
             }
         }
+
         public void InsertData()
         {
             var helmets = _csvReader.ProcessHelmets("Resources\\Files\\Fuel.csv");
@@ -107,6 +113,7 @@ namespace WarehouseApp.UserCommunication
             }
             _helmetRepository.Save();
         }
+
         public void UpdateHelmet() 
         {
             Console.WriteLine("Name: ");
