@@ -14,7 +14,7 @@ services.AddSingleton<IRepository<Helmet>, ListRepository<Helmet>>();
 services.AddSingleton<ICsvReader, CsvReader>();
 services.AddDbContext<WarehouseAppDbContext>(options=>options
     .UseSqlServer("Data Source=DESKTOP-9UOSCF3\\SQLEXPRESS;Initial Catalog=WarehouseAppStorage;Integrated Security=True;Encrypt=True;Trust Server Certificate=True"));
-
+ 
 var servicesProvider = services.BuildServiceProvider();
 var app = servicesProvider.GetService<IApp>();
 
